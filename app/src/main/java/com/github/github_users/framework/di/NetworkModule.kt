@@ -1,7 +1,6 @@
 package com.github.github_users.framework.di
 
 import com.github.github_users.framework.AppConstant.BASE_URL
-import com.github.github_users.framework.network.ApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
