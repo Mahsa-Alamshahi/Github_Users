@@ -7,22 +7,22 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import com.github.github_users.R
-import com.github.github_users.databinding.FragmentUserListBinding
+import com.github.github_users.databinding.FragmentUserInfoBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 
-
 @AndroidEntryPoint
-class UserListFragment : Fragment() {
+class UserInfoFragment : Fragment() {
 
-    private lateinit var binding: FragmentUserListBinding
+    lateinit var binding: FragmentUserInfoBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_user_list, container, false)
+        binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_user_info, container, false)
         return binding.root
     }
+
 
 }
