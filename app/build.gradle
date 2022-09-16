@@ -1,7 +1,17 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id("kotlin-android")
+    id("kotlin-kapt")
+    id("dagger.hilt.android.plugin")
+    id("androidx.navigation.safeargs")
+    id('kotlin-parcelize')
 }
+
+kapt {
+    correctErrorTypes = true
+}
+
 
 android {
     compileSdk 32
@@ -29,7 +39,29 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
+    dataBinding {
+        enabled = true
+    }
 }
+
+
+ext {
+    appcompat_version = '1.5.1'
+    constraintlayout_version = '2.1.4'
+    logger_version = '2.2.0'
+    nav_version = '2.5.2'
+    glide_version = '4.12.0'
+    multidex_version = '2.0.1'
+    lifecycle_version = '2.5.1'
+    gson_version = '2.9.0'
+    recyclerview_version = '1.2.1'
+    hilt_version = '2.43.2'
+    coroutine_version = '1.6.1'
+    retrofit_version = '2.6.0'
+    httplogging_version = '3.12.0'
+}
+
 
 dependencies {
 
@@ -40,4 +72,63 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+
+    // Lifecycle
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version")
+    implementation("androidx.lifecycle:lifecycle-common-java8:$lifecycle_version")
+    implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
+
+
+    // Hilt
+    implementation "com.google.dagger:hilt-android:$hilt_version"
+    kapt "com.google.dagger:hilt-compiler:$hilt_version"
+
+    // Glide
+    implementation("com.github.bumptech.glide:glide:$glide_version")
+    kapt("com.github.bumptech.glide:compiler:$glide_version")
+    implementation("jp.wasabeef:glide-transformations:4.3.0")
+    implementation("jp.co.cyberagent.android:gpuimage:2.1.0")
+
+
+    // Gson
+    implementation("com.google.code.gson:gson:$gson_version")
+
+
+    // Logger
+    implementation("com.orhanobut:logger:$logger_version")
+
+
+    // Multidex
+    implementation("androidx.multidex:multidex:$multidex_version")
+
+
+    // Recyclerview
+    implementation("androidx.recyclerview:recyclerview:$recyclerview_version")
+    implementation("androidx.recyclerview:recyclerview-selection:1.1.0")
+
+
+    // Coroutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutine_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutine_version"
+
+
+    // Kotlin
+    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+
+    // Feature module Support
+    implementation "androidx.navigation:navigation-dynamic-features-fragment:$nav_version"
+
+
+    // Jetpack Compose Integration
+    implementation "androidx.navigation:navigation-compose:$nav_version"
+
+
+    // Retrofit
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
+    implementation "com.squareup.okhttp3:logging-interceptor:$httplogging_version"
+
+
 }
