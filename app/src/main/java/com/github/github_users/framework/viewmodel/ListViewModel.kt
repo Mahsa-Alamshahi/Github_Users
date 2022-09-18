@@ -1,7 +1,12 @@
 package com.github.github_users.framework.viewmodel
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.paging.*
 import com.github.github_users.core.data.User
+import com.github.github_users.core.repository.UserRepository
 import com.github.github_users.core.usecase.GetUserListUsecase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -12,12 +17,12 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class ListViewModel @Inject constructor(var getUserListUsecase: GetUserListUsecase): ViewModel() {
+class ListViewModel @Inject constructor(var getUserListUsecase: GetUserListUsecase,
+) : ViewModel() {
 
-
-    fun getUserList(): Flow<List<User>> {
+    fun getUserList(page: Int): Flow<List<User>> {
         return flow {
-            emit(getUserListUsecase.getUserList())
+            emit(getUserListUsecase.getUserList(page))
         }.flowOn(Dispatchers.IO)
     }
 

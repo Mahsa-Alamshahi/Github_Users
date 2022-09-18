@@ -15,5 +15,11 @@
     <fragment
         android:id="@+id/userInfoFragment"
         android:name="com.github.github_users.presentation.UserInfoFragment"
-        android:label="UserInfoFragment" />
+        android:label="UserInfoFragment">
+        <argument
+            android:name="userLoginArg"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
 </navigation>

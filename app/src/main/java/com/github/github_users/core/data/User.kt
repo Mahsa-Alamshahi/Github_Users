@@ -98,6 +98,10 @@ data class User(
     val location: String? = null,
 
     @field:SerializedName("node_id")
-    val nodeId: String? = null
+    val nodeId: String? = null,
 
-)
+    @field:SerializedName("score")
+    val score: Double? = null,
+
+
+    )
