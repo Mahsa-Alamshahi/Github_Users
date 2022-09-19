@@ -6,5 +6,5 @@ import javax.inject.Inject
 
 
 class GetUserListUsecase @Inject constructor(private val userRepository: UserRepository) {
-    suspend fun getUserList(page: Int, searchQuery: String = ""): List<User> = userRepository.getAllUsers(page, searchQuery)
+    suspend fun getUserList(page: Int, searchQuery: String = ""): List<User>? = userRepository.getAllUsers(page, searchQuery)
 }

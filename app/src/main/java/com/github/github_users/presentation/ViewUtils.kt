@@ -15,9 +15,7 @@ fun loadUserImage(view: View, url: String?) {
                Glide.with(view)
             .load(url)
             .diskCacheStrategy(DiskCacheStrategy.ALL)
-            .thumbnail(0.5f)
-            .override(300, 300)
-            .centerCrop()
+                   .override(300,300)
             .placeholder(R.drawable.ic_baseline_image_24)
             .into(view as ImageView)
     }

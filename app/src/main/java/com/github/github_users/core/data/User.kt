@@ -8,31 +8,31 @@ data class User(
     val gistsUrl: String? = null,
 
     @field:SerializedName("repos_url")
-    val reposUrl: String? = null,
+    var reposUrl: String? = null,
 
     @field:SerializedName("following_url")
-    val followingUrl: String? = null,
+    var followingUrl: String? = null,
 
     @field:SerializedName("twitter_username")
     val twitterUsername: String? = null,
 
     @field:SerializedName("bio")
-    val bio: Any? = null,
+    var bio: Any? = null,
 
     @field:SerializedName("created_at")
-    val createdAt: String? = null,
+    var createdAt: String? = null,
 
     @field:SerializedName("login")
-    val login: String? = null,
+    var login: String? = null,
 
     @field:SerializedName("type")
-    val type: String? = null,
+    var type: String? = null,
 
     @field:SerializedName("blog")
-    val blog: String? = null,
+    var blog: String? = null,
 
     @field:SerializedName("subscriptions_url")
-    val subscriptionsUrl: String? = null,
+    var subscriptionsUrl: String? = null,
 
     @field:SerializedName("updated_at")
     val updatedAt: String? = null,

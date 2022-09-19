@@ -11,25 +11,54 @@
             type="com.github.github_users.presentation.BaseViewHolder" />
     </data>
 
+
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="@{(view) -> clickHandler.userListItemClickHandler(view, user.login)}">
+        android:padding="2dp"
+        android:onClick="@{(view) -> clickHandler.userListItemClickHandler(view, user.login)}"
+        android:orientation="vertical">
 
 
-
-
-        <ImageView
-            android:id="@+id/userImage"
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="4dp"
-            app:imageUrl="@{user.avatarUrl}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            app:cardCornerRadius="@dimen/card_corner_radius"
+            android:background="@color/white"
+            android:layout_centerHorizontal="true"
+            android:shape="ring"
+            android:thicknessRatio="1.9"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="1">
 
+
+                <ImageView
+                    android:id="@+id/userImage"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".4"
+                    android:padding="0dp"
+                    android:scaleType="fitXY"
+                    app:imageUrl="@{user.avatarUrl}" />
+
+
+                <TextView
+                    style="@style/TitleTextStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".6"
+                    android:layout_gravity="center"
+                    android:text="@{user.login}" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

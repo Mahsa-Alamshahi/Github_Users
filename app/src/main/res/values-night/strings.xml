@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="search">search</string>
+    <string name="retry">Retry</string>
+    <string name="error_catching_data">Faced problems. Please try again.</string>
+</resources>

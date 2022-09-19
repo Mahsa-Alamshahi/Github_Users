@@ -1,63 +1,76 @@
 package com.github.github_users.presentation
 
+
 import android.annotation.SuppressLint
-import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
-import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
-import com.github.github_users.R
 import com.github.github_users.core.data.User
 
 
-class UserListAdapter(var navigationHelper: NavigationHelper): RecyclerView.Adapter<BaseViewHolder<Any>>() {
+
+class UserListAdapter(var navigationHelper: NavigationHelper) :
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    private var itemList: ArrayList<User> = ArrayList()
 
 
-    var onItemClicked: ((Any) -> Unit)? = null
-    private var itemList: ArrayList<Any> = ArrayList()
+    companion object {
+        var TYPE_DATA = 0
+        var TYPE_PROGRESS = 1
+    }
 
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<Any> {
-        val binding: ViewDataBinding =
-            DataBindingUtil.inflate(LayoutInflater.from(parent.context), viewType, parent, false)
-        return BaseViewHolder(binding, navigationHelper) {
-            onItemClicked?.let { item ->
-                item(it)
-            }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return when (viewType) {
+            TYPE_DATA -> BaseViewHolder(parent, navigationHelper)
+            TYPE_PROGRESS -> ProgressHolder(parent)
+            else -> throw IllegalArgumentException("Invalid view type")
         }
-
-
     }
-
-    override fun onBindViewHolder(holder: BaseViewHolder<Any>, position: Int) {
-        holder.bind(itemList[position])
-    }
-
-
 
     override fun getItemCount(): Int {
-        return if (itemList == null) 0 else itemList.size
+        return itemList.size
+    }
+
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        when (holder) {
+            is BaseViewHolder -> holder.bind(itemList[position])
+            is ProgressHolder -> holder.bind()
+        }
+
     }
 
 
     override fun getItemViewType(position: Int): Int {
-        return R.layout.list_item
+        var viewType = itemList.get(position).type
+        return when (viewType) {
+            "User" -> TYPE_DATA
+            else -> TYPE_PROGRESS
+        }
+
     }
 
 
     @SuppressLint("NotifyDataSetChanged")
     fun setList(list: List<User>?) {
         with(this.itemList) {
-            clear()
             list?.let { addAll(it) }
         }
         notifyDataSetChanged()
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    fun updateList(tvShowList: List<User>, oldCount: Int, listSize: Int) {
-        this.itemList.addAll(tvShowList)
-        notifyDataSetChanged()
-        notifyItemRangeInserted(oldCount, listSize)
+
+    fun addProgress(userList: List<User?>) {
+        with(this.itemList) {
+            userList.let { addAll(this) }
+        }
+        notifyItemInserted(itemList.size - 1)
+    }
+
+
+    fun removeItem() {
+        itemList.removeAt(itemList.size - 1)
+        notifyItemRemoved(itemList.size)
     }
 }

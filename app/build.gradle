@@ -60,7 +60,6 @@ ext {
     coroutine_version = '1.6.1'
     retrofit_version = '2.6.0'
     httplogging_version = '3.12.0'
-    paging_version = "3.1.1"
 }
 
 
@@ -131,10 +130,8 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
     implementation "com.squareup.okhttp3:logging-interceptor:$httplogging_version"
 
-    // Paging
-    implementation "androidx.paging:paging-runtime:$paging_version"
 
-
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
 
 
 }

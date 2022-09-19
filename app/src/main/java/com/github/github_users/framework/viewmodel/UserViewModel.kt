@@ -2,7 +2,6 @@ package com.github.github_users.framework.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.github.github_users.core.data.User
-import com.github.github_users.core.usecase.GetUserListUsecase
 import com.github.github_users.core.usecase.GetUserUsecase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -16,7 +15,7 @@ import javax.inject.Inject
 class UserViewModel @Inject constructor(var getUserUsecase: GetUserUsecase): ViewModel() {
 
 
-    fun getUser(login: String): Flow<User> {
+    fun getUser(login: String): Flow<User?> {
         return flow {
             emit(getUserUsecase.getUser(login))
         }.flowOn(Dispatchers.IO)
