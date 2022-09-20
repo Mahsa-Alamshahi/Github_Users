@@ -33,6 +33,7 @@
             android:text="@string/error_catching_data"
             android:textColor="@color/white"
             android:visibility="gone"
+            android:onClick="@{(view) -> fragment.initView()}"
             app:drawableTopCompat="@drawable/ic_retry" />
 
 
@@ -75,7 +76,8 @@
                 <ImageButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="4dp"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginRight="2dp"
                     android:onClick="@{(view) -> fragment.checkEnteredNameForSearch()}"
                     android:src="@drawable/ic_twotone_person_search" />
 
@@ -87,8 +89,8 @@
                 android:id="@+id/userListView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="4dp"
-                android:padding="4dp"
+                android:layout_margin="2dp"
+                android:padding="2dp"
                 android:visibility="gone" />
 
 

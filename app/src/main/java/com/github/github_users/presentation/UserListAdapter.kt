@@ -36,7 +36,7 @@ class UserListAdapter(var navigationHelper: NavigationHelper) :
     }
 
 
-    fun addProgress(userList: List<User>) {
+    fun setData(userList: List<User>) {
         itemList = userList
     }
 

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="user"
             type="com.github.github_users.core.data.User" />
@@ -14,132 +15,119 @@
     </data>
 
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <RelativeLayout
+        android:id="@+id/errorGettingDataParent"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/dark_cream">
+
+        <ProgressBar
+            android:id="@+id/loading"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="gone" />
 
 
-        <RelativeLayout
-            android:id="@+id/errorGettingDataParent"
+        <TextView
+            android:id="@+id/txtRetry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:drawablePadding="12dp"
+            android:onClick="@{(view) -> clickHandler.getData()}"
+            android:text="@string/error_catching_data"
+            android:textColor="@color/white"
+            android:visibility="gone"
+            app:drawableTopCompat="@drawable/ic_retry" />
+
+
+        <ImageView
+            android:id="@+id/noData"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/ic_no_data"
+            android:visibility="gone" />
+
+
+        <LinearLayout
+            android:id="@+id/data"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center"
-            android:visibility="gone"
-            android:onClick="@{(view) -> clickHandler.getData()}"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            android:background="@drawable/user_info_bg">
-
-            <ProgressBar
-                android:id="@+id/loading"
-                style="?android:attr/progressBarStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:visibility="gone" />
+            android:orientation="vertical"
+            android:weightSum="1"
+            tools:context=".presentation.UserInfoFragment">
 
 
-            <TextView
-                android:id="@+id/txtRetry"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:drawablePadding="12dp"
-                android:text="@string/error_catching_data"
-                android:textColor="@color/white"
-                android:visibility="gone"
-                app:drawableTopCompat="@drawable/ic_retry" />
-
-
-            <ImageView
-                android:id="@+id/noData"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:src="@drawable/ic_no_data"
-                android:visibility="gone" />
-
-        </RelativeLayout>
-
-
-            <LinearLayout
-                android:id="@+id/data"
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:weightSum="1"
-                tools:context=".presentation.UserInfoFragment">
+                android:layout_height="0dp"
+                android:layout_weight=".4"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toTopOf="@id/verticalScreenGuildeLine"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
 
-                <androidx.cardview.widget.CardView
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight=".4"
+                    android:layout_height="match_parent"
                     android:orientation="horizontal"
-                    app:layout_constraintBottom_toTopOf="@id/verticalScreenGuildeLine"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    android:weightSum="1">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/userImage"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_margin="2dp"
+                        android:layout_weight=".5"
+                        android:padding="4dp"
+                        app:civ_border_color="#FF000000"
+                        app:civ_border_width="1dp"
+                        app:imageUrl="@{user.avatarUrl}" />
 
 
                     <LinearLayout
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:orientation="horizontal"
-                        android:weightSum="1">
+                        android:layout_weight=".5"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical">
 
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            android:id="@+id/userImage"
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_margin="2dp"
-                            android:layout_weight=".5"
-                            android:padding="4dp"
-                            app:civ_border_color="#FF000000"
-                            app:civ_border_width="1dp"
-                            app:imageUrl="@{user.avatarUrl}" />
-
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight=".5"
-                            android:gravity="center_vertical"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:id="@+id/txtName"
-                                style="@style/TitleTextStyle"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_vertical"
-                                android:drawablePadding="8dp"
-                                android:text="@{user.name}"
-                                app:drawableStartCompat="@drawable/ic_sharp_person" />
+                        <TextView
+                            android:id="@+id/txtName"
+                            style="@style/TitleTextStyle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:drawablePadding="8dp"
+                            android:text="@{user.name}"
+                            app:drawableStartCompat="@drawable/ic_sharp_person" />
 
 
-                            <TextView
-                                style="@style/TextStyle"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_vertical"
-                                android:drawablePadding="8dp"
-                                android:text='@{user.location != null ? user.location : "-"}'
-                                app:drawableStartCompat="@drawable/ic_baseline_location" />
+                        <TextView
+                            style="@style/TextStyle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:drawablePadding="8dp"
+                            android:text='@{user.location != null ? user.location : "-"}'
+                            app:drawableStartCompat="@drawable/ic_baseline_location" />
 
 
-                        </LinearLayout>
                     </LinearLayout>
-                </androidx.cardview.widget.CardView>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
 
-                <ScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight=".6"
-                    android:fillViewport="true">
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight=".6"
+                android:fillViewport="true">
 
 
                 <LinearLayout
@@ -266,9 +254,7 @@
 
 
                 </LinearLayout>
-                </ScrollView>
-            </LinearLayout>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
+            </ScrollView>
+        </LinearLayout>
+    </RelativeLayout>
 </layout>

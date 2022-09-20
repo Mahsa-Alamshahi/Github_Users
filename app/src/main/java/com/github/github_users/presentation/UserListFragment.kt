@@ -1,12 +1,14 @@
 package com.github.github_users.presentation
 
 import android.annotation.SuppressLint
-import android.os.Binder
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.annotation.NonNull
+import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -30,20 +32,16 @@ import javax.inject.Inject
 class UserListFragment : Fragment() {
 
 
-    private var loading: Boolean = false
-
     private lateinit var layoutManager: LinearLayoutManager
     private lateinit var binding: FragmentUserListBinding
     val viewModel by viewModels<ListViewModel>()
     val searchViewModel by viewModels<SearchViewModel>()
 
     var userList = arrayListOf<User>()
+    private var loading: Boolean = false
 
     @Inject
     lateinit var listAdapter: UserListAdapter
-
-    @Inject
-    lateinit var logging: HttpLoggingInterceptor
 
 
 
@@ -58,20 +56,41 @@ class UserListFragment : Fragment() {
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initRecyclerView()
-        showProgressbarWhileGettingData(binding.txtRetry, binding.loading, binding.noData, binding.userListView)
-        loadUserList()
-        initScrollListener()
+        initView()
     }
 
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    fun initView() {
+        if (viewModel.isOnline()) {
+            initRecyclerView()
+            showProgressbarWhileGettingData(
+                binding.txtRetry,
+                binding.loading,
+                binding.noData,
+                binding.userListView
+            )
+            loadUserList()
+            initScrollListener()
+        } else {
+            showRetryWhenIncounteredProblems(
+                binding.txtRetry,
+                binding.loading,
+                binding.noData,
+                binding.userListView
+            )
+        }
+    }
 
     private fun initScrollListener() {
         var visibleItemCount = 0
         var totalItemCount = 0
         var pastVisiblesItems = 0
         binding.userListView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            @RequiresApi(Build.VERSION_CODES.M)
             override fun onScrolled(@NonNull recyclerView: RecyclerView, dx: Int, dy: Int) {
                 if (dy > 0) {
                     visibleItemCount =
@@ -82,12 +101,15 @@ class UserListFragment : Fragment() {
                         (binding.userListView.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
                     if (!loading) {
                         if (visibleItemCount + pastVisiblesItems >= totalItemCount) {
-                            loading = true
-                            loadUserList()
+                            if (viewModel.isOnline()) {
+                                loading = true
+                                loadUserList()
+                            } else {
+                                Toast.makeText(context, "No internet connection. Pleace check it and try again.", Toast.LENGTH_SHORT).show()
+                            }
                         }
                     }
                 }
-//                    if (notLoading && layoutManager.findLastCompletelyVisibleItemPosition() == userList.size - 1) {
             }
         })
     }
@@ -105,18 +127,33 @@ class UserListFragment : Fragment() {
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.M)
     fun checkEnteredNameForSearch() {
-        showProgressbarWhileGettingData(binding.txtRetry, binding.loading, binding.noData, binding.userListView)
-        if (binding.edtSearch.text.toString() != "") {
-            userList.clear()
-            listAdapter.refreshList()
-            initScrollListener()
-            loadSearchResult()
-        } else {
-            userList.clear()
-            listAdapter.refreshList()
-            initScrollListener()
-            loadUserList()
+        if (viewModel.isOnline()) {
+            showProgressbarWhileGettingData(
+                binding.txtRetry,
+                binding.loading,
+                binding.noData,
+                binding.userListView
+            )
+            if (binding.edtSearch.text.toString() != "") {
+                userList.clear()
+                listAdapter.refreshList()
+                initScrollListener()
+                loadSearchResult()
+            } else {
+                userList.clear()
+                listAdapter.refreshList()
+                initScrollListener()
+                loadUserList()
+            }
+        }else {
+            showRetryWhenIncounteredProblems(
+                binding.txtRetry,
+                binding.loading,
+                binding.noData,
+                binding.userListView
+            )
         }
     }
 
@@ -127,7 +164,7 @@ class UserListFragment : Fragment() {
                 loading = true
                 searchViewModel.searchUser(userList.size, binding.edtSearch.text.toString())
                     .collect { list ->
-                       setDataIntoRecyclerView(list)
+                        setDataIntoRecyclerView(list)
                     }
             }
         }
@@ -138,7 +175,7 @@ class UserListFragment : Fragment() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 loading = true
                 viewModel.getUserList(userList.size).collect { list ->
-                   setDataIntoRecyclerView(list)
+                    setDataIntoRecyclerView(list)
                 }
             }
         }
@@ -146,54 +183,26 @@ class UserListFragment : Fragment() {
 
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun setDataIntoRecyclerView(list: List<User>?){
+    private fun setDataIntoRecyclerView(list: List<User>?) {
         if (list != null) {
             if (list.isNotEmpty()) {
                 showData(binding.txtRetry, binding.loading, binding.noData, binding.userListView)
                 userList.addAll(list)
-                listAdapter.addProgress(userList)
+                listAdapter.setData(userList)
                 listAdapter.notifyDataSetChanged()
                 loading = false
             } else {
                 showNoData(binding.txtRetry, binding.loading, binding.noData, binding.userListView)
             }
         } else {
-            showRetryWhenIncounteredProblems(binding.txtRetry, binding.loading, binding.noData, binding.userListView)
+            showRetryWhenIncounteredProblems(
+                binding.txtRetry,
+                binding.loading,
+                binding.noData,
+                binding.userListView
+            )
         }
     }
-
-
-//    private fun showProgressbarWhileGettingData() {
-//        binding.txtRetry.visibility = View.GONE
-//        binding.loading.visibility = View.VISIBLE
-//        binding.noData.visibility = View.GONE
-//        binding.userListView.visibility = View.GONE
-//    }
-//
-//
-//    private fun showRetryWhenIncounteredProblems() {
-//        binding.txtRetry.visibility = View.VISIBLE
-//        binding.loading.visibility = View.GONE
-//        binding.noData.visibility = View.GONE
-//        binding.userListView.visibility = View.GONE
-//    }
-//
-//
-//    private fun showNoData() {
-//        binding.txtRetry.visibility = View.GONE
-//        binding.loading.visibility = View.GONE
-//        binding.noData.visibility = View.VISIBLE
-//        binding.userListView.visibility = View.GONE
-//    }
-//
-//
-//    private fun showData() {
-//        binding.txtRetry.visibility = View.GONE
-//        binding.loading.visibility = View.GONE
-//        binding.noData.visibility = View.GONE
-//        binding.userListView.visibility = View.VISIBLE
-//    }
-
 }
 
 

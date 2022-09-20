@@ -1,10 +1,12 @@
 package com.github.github_users.presentation
 
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -41,9 +43,10 @@ class UserInfoFragment : Fragment() {
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        getData()
+            getData()
     }
 
 
@@ -68,7 +71,9 @@ class UserInfoFragment : Fragment() {
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.M)
     fun getData() {
+        if (viewModel.isOnline()) {
         showProgressbarWhileGettingData(
             binding.txtRetry,
             binding.loading,
@@ -76,6 +81,14 @@ class UserInfoFragment : Fragment() {
             binding.data
         )
         getUserData()
+        } else {
+            showRetryWhenIncounteredProblems(
+                binding.txtRetry,
+                binding.loading,
+                binding.noData,
+                binding.data
+            )
+        }
     }
 
 }

@@ -43,10 +43,8 @@
 
                 <ImageView
                     android:id="@+id/userImage"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight=".4"
-                    android:padding="0dp"
+                    android:layout_width="128dp"
+                    android:layout_height="128dp"
                     android:scaleType="fitXY"
                     app:imageUrl="@{user.avatarUrl}" />
 
@@ -55,7 +53,7 @@
                     style="@style/TitleTextStyle"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight=".6"
+                    android:layout_weight="1"
                     android:layout_gravity="center"
                     android:text="@{user.login}" />
             </LinearLayout>
