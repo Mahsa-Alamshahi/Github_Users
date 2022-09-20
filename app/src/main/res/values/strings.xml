@@ -1,3 +1,8 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Github Users</string>
+    <string name="followers">followers</string>
+    <string name="followings">followings</string>
+    <string name="search">search</string>
+    <string name="retry" tools:ignore="PrivateResource">Retry</string>
+    <string name="error_catching_data">Faced problems. Please try again.</string>
 </resources>
