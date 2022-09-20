@@ -1,7 +1,6 @@
 package com.github.github_users.core.repository
 
 import com.github.github_users.core.data.User
-import com.github.github_users.core.data.UserList
 import com.github.github_users.framework.AppConstant
 import com.github.github_users.framework.network.ApiService
 import javax.inject.Inject

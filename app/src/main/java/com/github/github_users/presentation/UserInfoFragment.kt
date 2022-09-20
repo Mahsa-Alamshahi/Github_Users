@@ -1,6 +1,6 @@
 package com.github.github_users.presentation
 
-import android.annotation.SuppressLint
+
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -41,10 +41,9 @@ class UserInfoFragment : Fragment() {
     }
 
 
-    @SuppressLint("UnsafeRepeatOnLifecycleDetector")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        loadingView()
+        getData()
     }
 
 
@@ -53,29 +52,30 @@ class UserInfoFragment : Fragment() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.getUser(userLogin).collect { user ->
                     user?.let {
-                        binding.errorGettingDataParent.visibility = View.GONE
+                        showData(binding.txtRetry, binding.loading, binding.noData, binding.data)
                         binding.user = it
                     } ?: run {
-                        showErrorOnView()
+                        showRetryWhenIncounteredProblems(
+                            binding.txtRetry,
+                            binding.loading,
+                            binding.noData,
+                            binding.data
+                        )
                     }
                 }
             }
         }
     }
 
-    fun loadingView() {
+
+    fun getData() {
+        showProgressbarWhileGettingData(
+            binding.txtRetry,
+            binding.loading,
+            binding.noData,
+            binding.data
+        )
         getUserData()
-        binding.errorGettingDataParent.visibility = View.VISIBLE
-        binding.imgLoadingRetry.visibility = View.GONE
-        binding.txtLoadingRetry.visibility = View.GONE
-        binding.loading.visibility = View.VISIBLE
     }
 
-
-    private fun showErrorOnView() {
-        binding.errorGettingDataParent.visibility = View.VISIBLE
-        binding.imgLoadingRetry.visibility = View.VISIBLE
-        binding.txtLoadingRetry.visibility = View.VISIBLE
-        binding.loading.visibility = View.GONE
-    }
 }

@@ -25,7 +25,7 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:visibility="gone"
-            android:onClick="@{(view) -> clickHandler.loadingView()}"
+            android:onClick="@{(view) -> clickHandler.getData()}"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -37,29 +37,35 @@
                 style="?android:attr/progressBarStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:layout_centerInParent="true"/>
-
-            <ImageView
-                android:id="@+id/imgLoadingRetry"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
                 android:layout_centerInParent="true"
-                android:src="@drawable/ic_retry"/>
+                android:visibility="gone" />
+
 
             <TextView
-                android:id="@+id/txtLoadingRetry"
+                android:id="@+id/txtRetry"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:drawablePadding="12dp"
+                android:text="@string/error_catching_data"
+                android:textColor="@color/white"
                 android:visibility="gone"
-                android:layout_below="@id/imgLoadingRetry"
-                android:text="@string/error_catching_data"/>
+                app:drawableTopCompat="@drawable/ic_retry" />
+
+
+            <ImageView
+                android:id="@+id/noData"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/ic_no_data"
+                android:visibility="gone" />
 
         </RelativeLayout>
 
 
             <LinearLayout
+                android:id="@+id/data"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
@@ -139,7 +145,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="#dbc7b9"
+                    android:background="@color/cream"
                     android:orientation="vertical"
                     android:padding="12dp"
                     app:layout_constraintBottom_toBottomOf="parent"

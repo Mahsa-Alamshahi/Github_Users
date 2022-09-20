@@ -1,9 +1,7 @@
 package com.github.github_users.framework.network
 
 import com.github.github_users.core.data.User
-import com.github.github_users.core.data.UserList
 import com.github.github_users.framework.AppConstant
-import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query

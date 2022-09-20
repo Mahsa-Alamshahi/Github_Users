@@ -20,3 +20,36 @@ fun loadUserImage(view: View, url: String?) {
             .into(view as ImageView)
     }
 }
+
+
+
+fun showProgressbarWhileGettingData(retry: View, loading: View, noData: View, data: View) {
+    retry.visibility = View.GONE
+    loading.visibility = View.VISIBLE
+    noData.visibility = View.GONE
+    data.visibility = View.GONE
+}
+
+
+fun showRetryWhenIncounteredProblems(retry: View, loading: View, noData: View, data: View) {
+    retry.visibility = View.VISIBLE
+    loading.visibility = View.GONE
+    noData.visibility = View.GONE
+    data.visibility = View.GONE
+}
+
+
+fun showNoData(retry: View, loading: View, noData: View, data: View) {
+    retry.visibility = View.GONE
+    loading.visibility = View.GONE
+    noData.visibility = View.VISIBLE
+    data.visibility = View.GONE
+}
+
+
+fun showData(retry: View, loading: View, noData: View, data: View) {
+    retry.visibility = View.GONE
+    loading.visibility = View.GONE
+    noData.visibility = View.GONE
+    data.visibility = View.VISIBLE
+}

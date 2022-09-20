@@ -1,39 +1,29 @@
 package com.github.github_users.presentation
 
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewbinding.ViewBinding
 import com.github.github_users.core.data.User
 import com.github.github_users.databinding.ListItemBinding
-import com.orhanobut.logger.Logger
-
-class BaseViewHolder(
-    var itemBinding: ListItemBinding,
-) : RecyclerView.ViewHolder(itemBinding.root) {
 
 
-    lateinit var navigationHelper: NavigationHelper
 
-    constructor(
-        parent: ViewGroup,
-        navigationHelper: NavigationHelper,
-    ) : this(
-        ListItemBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent,
-            false
-        )
-    ) {
-        this.navigationHelper = navigationHelper
+class BaseViewHolder<in T>(
+    var viewBinding: ViewBinding,
+    var navigationHelper: NavigationHelper,
+) :
+    RecyclerView.ViewHolder(viewBinding.root) {
+
+
+    fun bind(item: T) {
+      bindUser(item as User)
     }
 
 
-    fun bind(item: User) {
-        itemBinding.user = item
-        itemBinding.clickHandler = this
-        Logger.d("onsore " + item.id + " "+ item.avatarUrl )
+    private fun bindUser(item: User) {
+        (viewBinding as ListItemBinding).user = item
+        (viewBinding as ListItemBinding).clickHandler = this
     }
 
 

@@ -1,6 +1,7 @@
 package com.github.github_users.presentation
 
 import android.annotation.SuppressLint
+import android.os.Binder
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -60,16 +61,10 @@ class UserListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initRecyclerView()
-        showProgressbarWhileGettingData()
+        showProgressbarWhileGettingData(binding.txtRetry, binding.loading, binding.noData, binding.userListView)
         loadUserList()
         initScrollListener()
     }
-
-
-//    private fun logRetrofit() {
-//        logging.level = HttpLoggingInterceptor.Level.BODY
-//        logging.redactHeader("body")
-//    }
 
 
     private fun initScrollListener() {
@@ -111,7 +106,7 @@ class UserListFragment : Fragment() {
 
 
     fun checkEnteredNameForSearch() {
-        showProgressbarWhileGettingData()
+        showProgressbarWhileGettingData(binding.txtRetry, binding.loading, binding.noData, binding.userListView)
         if (binding.edtSearch.text.toString() != "") {
             userList.clear()
             listAdapter.refreshList()
@@ -154,50 +149,50 @@ class UserListFragment : Fragment() {
     private fun setDataIntoRecyclerView(list: List<User>?){
         if (list != null) {
             if (list.isNotEmpty()) {
-                showData()
+                showData(binding.txtRetry, binding.loading, binding.noData, binding.userListView)
                 userList.addAll(list)
                 listAdapter.addProgress(userList)
                 listAdapter.notifyDataSetChanged()
                 loading = false
             } else {
-                showNoData()
+                showNoData(binding.txtRetry, binding.loading, binding.noData, binding.userListView)
             }
         } else {
-            showRetryWhenIncounteredProblems()
+            showRetryWhenIncounteredProblems(binding.txtRetry, binding.loading, binding.noData, binding.userListView)
         }
     }
 
 
-    private fun showProgressbarWhileGettingData() {
-        binding.txtRetry.visibility = View.GONE
-        binding.loading.visibility = View.VISIBLE
-        binding.noData.visibility = View.GONE
-        binding.userListView.visibility = View.GONE
-    }
-
-
-    private fun showRetryWhenIncounteredProblems() {
-        binding.txtRetry.visibility = View.VISIBLE
-        binding.loading.visibility = View.GONE
-        binding.noData.visibility = View.GONE
-        binding.userListView.visibility = View.GONE
-    }
-
-
-    private fun showNoData() {
-        binding.txtRetry.visibility = View.GONE
-        binding.loading.visibility = View.GONE
-        binding.noData.visibility = View.VISIBLE
-        binding.userListView.visibility = View.GONE
-    }
-
-
-    private fun showData() {
-        binding.txtRetry.visibility = View.GONE
-        binding.loading.visibility = View.GONE
-        binding.noData.visibility = View.GONE
-        binding.userListView.visibility = View.VISIBLE
-    }
+//    private fun showProgressbarWhileGettingData() {
+//        binding.txtRetry.visibility = View.GONE
+//        binding.loading.visibility = View.VISIBLE
+//        binding.noData.visibility = View.GONE
+//        binding.userListView.visibility = View.GONE
+//    }
+//
+//
+//    private fun showRetryWhenIncounteredProblems() {
+//        binding.txtRetry.visibility = View.VISIBLE
+//        binding.loading.visibility = View.GONE
+//        binding.noData.visibility = View.GONE
+//        binding.userListView.visibility = View.GONE
+//    }
+//
+//
+//    private fun showNoData() {
+//        binding.txtRetry.visibility = View.GONE
+//        binding.loading.visibility = View.GONE
+//        binding.noData.visibility = View.VISIBLE
+//        binding.userListView.visibility = View.GONE
+//    }
+//
+//
+//    private fun showData() {
+//        binding.txtRetry.visibility = View.GONE
+//        binding.loading.visibility = View.GONE
+//        binding.noData.visibility = View.GONE
+//        binding.userListView.visibility = View.VISIBLE
+//    }
 
 }
 

@@ -2,7 +2,6 @@ package com.github.github_users.framework.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.github.github_users.core.data.User
-import com.github.github_users.core.data.UserList
 import com.github.github_users.core.usecase.SearchUserUsecase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
