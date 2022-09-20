@@ -7,6 +7,7 @@ import androidx.core.os.bundleOf
 import androidx.recyclerview.widget.RecyclerView
 import com.github.github_users.core.data.User
 import com.github.github_users.databinding.ListItemBinding
+import com.orhanobut.logger.Logger
 
 class BaseViewHolder(
     var itemBinding: ListItemBinding,
@@ -32,6 +33,7 @@ class BaseViewHolder(
     fun bind(item: User) {
         itemBinding.user = item
         itemBinding.clickHandler = this
+        Logger.d("onsore " + item.id + " "+ item.avatarUrl )
     }
 
 

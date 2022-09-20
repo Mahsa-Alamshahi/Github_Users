@@ -132,6 +132,7 @@ dependencies {
 
 
     implementation 'de.hdodenhof:circleimageview:3.1.0'
+    implementation("com.squareup.okhttp3:logging-interceptor:3.12.0")
 
 
 }

@@ -28,7 +28,7 @@
             android:background="@color/white"
             android:layout_centerHorizontal="true"
             android:shape="ring"
-            android:thicknessRatio="1.9"
+            android:thicknessRatio=".2"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent">

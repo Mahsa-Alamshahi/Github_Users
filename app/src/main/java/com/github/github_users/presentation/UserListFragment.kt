@@ -18,8 +18,10 @@ import com.github.github_users.R
 import com.github.github_users.core.data.User
 import com.github.github_users.databinding.FragmentUserListBinding
 import com.github.github_users.framework.viewmodel.ListViewModel
+import com.github.github_users.framework.viewmodel.SearchViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import okhttp3.logging.HttpLoggingInterceptor
 import javax.inject.Inject
 
 
@@ -27,15 +29,21 @@ import javax.inject.Inject
 class UserListFragment : Fragment() {
 
 
+    private var loading: Boolean = false
+
     private lateinit var layoutManager: LinearLayoutManager
     private lateinit var binding: FragmentUserListBinding
     val viewModel by viewModels<ListViewModel>()
+    val searchViewModel by viewModels<SearchViewModel>()
 
-    var notLoading = true
-    var userList: ArrayList<User?> = ArrayList()
+    var userList = arrayListOf<User>()
 
     @Inject
     lateinit var listAdapter: UserListAdapter
+
+    @Inject
+    lateinit var logging: HttpLoggingInterceptor
+
 
 
     override fun onCreateView(
@@ -49,140 +57,148 @@ class UserListFragment : Fragment() {
     }
 
 
-    @SuppressLint("UnsafeRepeatOnLifecycleDetector")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        binding.noData.visibility = View.GONE
-
         initRecyclerView()
-        loadingView()
+        showProgressbarWhileGettingData()
+        loadUserList()
         initScrollListener()
     }
 
 
-    private fun loadPageList(currentPage: Int) {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.getUserList(currentPage).collect { list ->
-                    list?.let {
-                        if (list.isEmpty()) {
-                            showNoData()
-                        } else {
-                            with(userList) {
-                                clear()
-                                addAll(list)
-                            }
-                            listAdapter.setList(list)
-                        }
-                    } ?: run {
-                        showErrorOnView()
-                        retry()
-                    }
-                }
-            }
-        }
-    }
-
-
-    private fun retry() {
-        binding.retry.visibility = View.VISIBLE
-    }
-
-
-    private fun showNoData() {
-        binding.noData.visibility = View.VISIBLE
-        binding.retry.visibility = View.GONE
-    }
-
-
-    private fun loadMore() {
-        userList.add(User().apply {
-            this.type = "Progress"
-        })
-        listAdapter.addProgress(userList)
-        listAdapter.notifyItemInserted(userList.size - 1)
-        notLoading = false
-
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.getUserList(userList.size - 1).collect { list ->
-
-//                    userList.removeAt(userList.size - 1)
-//                    listAdapter.notifyItemRemoved(userList.size)
-                    listAdapter.removeItem()
-                    list?.let {
-                        if (list.isEmpty()) {
-                            showNoData()
-                        } else {
-                            with(userList) {
-                                clear()
-                                addAll(list)
-                            }
-                            listAdapter.setList(list)
-                            notLoading = true
-                        }
-                    } ?: run {
-                        showErrorOnView()
-                        retry()
-                    }
-                }
-            }
-        }
-    }
+//    private fun logRetrofit() {
+//        logging.level = HttpLoggingInterceptor.Level.BODY
+//        logging.redactHeader("body")
+//    }
 
 
     private fun initScrollListener() {
+        var visibleItemCount = 0
+        var totalItemCount = 0
+        var pastVisiblesItems = 0
         binding.userListView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(@NonNull recyclerView: RecyclerView, dx: Int, dy: Int) {
-                if (dy > 0) { //check for scroll down
-                    if (notLoading && layoutManager.findLastCompletelyVisibleItemPosition() == userList.size - 1) {
-                              loadMore()
+                if (dy > 0) {
+                    visibleItemCount =
+                        (binding.userListView.layoutManager as LinearLayoutManager).childCount
+                    totalItemCount =
+                        (binding.userListView.layoutManager as LinearLayoutManager).itemCount
+                    pastVisiblesItems =
+                        (binding.userListView.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
+                    if (!loading) {
+                        if (visibleItemCount + pastVisiblesItems >= totalItemCount) {
+                            loading = true
+                            loadUserList()
+                        }
                     }
                 }
-           //        if (notLoading && layoutManager.findLastCompletelyVisibleItemPosition() == userList.size - 1) {
-//                    // bottom of list!
-//                    loadMore()
-//                }
+//                    if (notLoading && layoutManager.findLastCompletelyVisibleItemPosition() == userList.size - 1) {
             }
         })
     }
 
 
-    fun retryClickHandler(){
-        binding.retry.visibility = View.GONE
-        loadPageList(1)
-    }
-
-    fun initRecyclerView() {
+    private fun initRecyclerView() {
         binding.userListView.setHasFixedSize(true)
         layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false).apply {
             isAutoMeasureEnabled = false
         }
-        binding.userListView.layoutManager = layoutManager
         listAdapter.stateRestorationPolicy =
             RecyclerView.Adapter.StateRestorationPolicy.PREVENT
+        binding.userListView.layoutManager = layoutManager
         binding.userListView.adapter = listAdapter
-
     }
 
 
+    fun checkEnteredNameForSearch() {
+        showProgressbarWhileGettingData()
+        if (binding.edtSearch.text.toString() != "") {
+            userList.clear()
+            listAdapter.refreshList()
+            initScrollListener()
+            loadSearchResult()
+        } else {
+            userList.clear()
+            listAdapter.refreshList()
+            initScrollListener()
+            loadUserList()
+        }
+    }
 
-    fun loadingView() {
-        loadPageList(1)
-        binding.errorGettingDataParent.visibility = View.VISIBLE
-        binding.imgLoadingRetry.visibility = View.GONE
-        binding.txtLoadingRetry.visibility = View.GONE
+
+    private fun loadSearchResult() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                loading = true
+                searchViewModel.searchUser(userList.size, binding.edtSearch.text.toString())
+                    .collect { list ->
+                       setDataIntoRecyclerView(list)
+                    }
+            }
+        }
+    }
+
+    private fun loadUserList() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                loading = true
+                viewModel.getUserList(userList.size).collect { list ->
+                   setDataIntoRecyclerView(list)
+                }
+            }
+        }
+    }
+
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun setDataIntoRecyclerView(list: List<User>?){
+        if (list != null) {
+            if (list.isNotEmpty()) {
+                showData()
+                userList.addAll(list)
+                listAdapter.addProgress(userList)
+                listAdapter.notifyDataSetChanged()
+                loading = false
+            } else {
+                showNoData()
+            }
+        } else {
+            showRetryWhenIncounteredProblems()
+        }
+    }
+
+
+    private fun showProgressbarWhileGettingData() {
+        binding.txtRetry.visibility = View.GONE
         binding.loading.visibility = View.VISIBLE
+        binding.noData.visibility = View.GONE
+        binding.userListView.visibility = View.GONE
     }
 
 
-    private fun showErrorOnView() {
-        binding.errorGettingDataParent.visibility = View.VISIBLE
-        binding.imgLoadingRetry.visibility = View.VISIBLE
-        binding.txtLoadingRetry.visibility = View.VISIBLE
+    private fun showRetryWhenIncounteredProblems() {
+        binding.txtRetry.visibility = View.VISIBLE
         binding.loading.visibility = View.GONE
+        binding.noData.visibility = View.GONE
+        binding.userListView.visibility = View.GONE
     }
+
+
+    private fun showNoData() {
+        binding.txtRetry.visibility = View.GONE
+        binding.loading.visibility = View.GONE
+        binding.noData.visibility = View.VISIBLE
+        binding.userListView.visibility = View.GONE
+    }
+
+
+    private fun showData() {
+        binding.txtRetry.visibility = View.GONE
+        binding.loading.visibility = View.GONE
+        binding.noData.visibility = View.GONE
+        binding.userListView.visibility = View.VISIBLE
+    }
+
 }
 
 

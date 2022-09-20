@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -14,51 +15,25 @@
         android:background="@color/dark_cream">
 
 
-        <RelativeLayout
-            android:id="@+id/errorGettingDataParent"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:visibility="gone"
-            android:onClick="@{(view) -> fragment.loadingView()}">
-
-            <ProgressBar
-                android:id="@+id/loading"
-                style="?android:attr/progressBarStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:layout_centerInParent="true"/>
-
-            <ImageView
-                android:id="@+id/imgLoadingRetry"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:layout_centerInParent="true"
-                android:src="@drawable/ic_retry"/>
-
-            <TextView
-                android:id="@+id/txtLoadingRetry"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:layout_below="@id/imgLoadingRetry"
-                android:text="@string/error_catching_data"/>
-
-        </RelativeLayout>
-
-        <ImageButton
-            android:id="@+id/retry"
+        <ProgressBar
+            android:id="@+id/loading"
+            style="?android:attr/progressBarStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:background="@null"
-            android:indeterminate="true"
-            android:onClick="@{(view) -> fragment.retryClickHandler()}"
-            android:src="@drawable/ic_retry"
-            android:text="@string/retry"
             android:visibility="gone" />
+
+
+        <TextView
+            android:id="@+id/txtRetry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:drawablePadding="12dp"
+            android:text="@string/error_catching_data"
+            android:textColor="@color/white"
+            android:visibility="gone"
+            app:drawableTopCompat="@drawable/ic_retry" />
 
 
         <ImageView
@@ -66,7 +41,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:src="@drawable/ic_no_data"
             android:visibility="gone" />
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -81,39 +58,39 @@
                 android:orientation="horizontal"
                 android:weightSum="1">
 
-            <EditText
-                android:id="@+id/edtSearch"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@color/white"
-                android:layout_margin="4dp"
-                android:padding="8dp"
-                android:hint="@string/search" />
+
+                <EditText
+                    android:id="@+id/edtSearch"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:layout_weight="1"
+                    android:background="@color/white"
+                    android:hint="@string/search"
+                    android:lines="1"
+                    android:padding="8dp"
+                    android:singleLine="true" />
 
 
                 <ImageButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="4dp"
-                    android:src="@drawable/ic_twotone_person_search"/>
+                    android:onClick="@{(view) -> fragment.checkEnteredNameForSearch()}"
+                    android:src="@drawable/ic_twotone_person_search" />
 
 
             </LinearLayout>
+
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/userListView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="4dp"
-                android:padding="4dp" />
+                android:padding="4dp"
+                android:visibility="gone" />
 
-
-            <ProgressBar
-                android:id="@+id/loadMoreProgress"
-                style="?android:attr/progressBarStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
 
         </LinearLayout>
     </RelativeLayout>

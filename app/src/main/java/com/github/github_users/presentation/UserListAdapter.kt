@@ -1,17 +1,16 @@
 package com.github.github_users.presentation
 
 
-import android.annotation.SuppressLint
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.github.github_users.core.data.User
 
 
-
 class UserListAdapter(var navigationHelper: NavigationHelper) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private var itemList: ArrayList<User> = ArrayList()
+
+    private var itemList = listOf<User>()
 
 
     companion object {
@@ -23,7 +22,7 @@ class UserListAdapter(var navigationHelper: NavigationHelper) :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             TYPE_DATA -> BaseViewHolder(parent, navigationHelper)
-            TYPE_PROGRESS -> ProgressHolder(parent)
+//            TYPE_PROGRESS -> ProgressHolder(parent)
             else -> throw IllegalArgumentException("Invalid view type")
         }
     }
@@ -43,34 +42,16 @@ class UserListAdapter(var navigationHelper: NavigationHelper) :
 
 
     override fun getItemViewType(position: Int): Int {
-        var viewType = itemList.get(position).type
-        return when (viewType) {
-            "User" -> TYPE_DATA
-            else -> TYPE_PROGRESS
-        }
+        return TYPE_DATA
+    }
 
+    fun refreshList() {
+        itemList = listOf<User>()
+    }
+
+    fun addProgress(userList: List<User>) {
+        itemList = userList
     }
 
 
-    @SuppressLint("NotifyDataSetChanged")
-    fun setList(list: List<User>?) {
-        with(this.itemList) {
-            list?.let { addAll(it) }
-        }
-        notifyDataSetChanged()
-    }
-
-
-    fun addProgress(userList: List<User?>) {
-        with(this.itemList) {
-            userList.let { addAll(this) }
-        }
-        notifyItemInserted(itemList.size - 1)
-    }
-
-
-    fun removeItem() {
-        itemList.removeAt(itemList.size - 1)
-        notifyItemRemoved(itemList.size)
-    }
 }

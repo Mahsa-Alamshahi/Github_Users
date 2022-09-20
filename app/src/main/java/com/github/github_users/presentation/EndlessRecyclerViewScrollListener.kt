@@ -1,10 +1,8 @@
 package com.github.github_users.presentation
 
-import android.annotation.SuppressLint
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
 
 
 abstract class EndlessRecyclerViewScrollListener constructor(): RecyclerView.OnScrollListener() {
@@ -12,13 +10,13 @@ abstract class EndlessRecyclerViewScrollListener constructor(): RecyclerView.OnS
     private var loading = true
     private var previousItemCount = 0
 
-    var currentPage = 0
-    var totalPages: Long = 10
+    var currentItem = 1
+    var itemsPerPage: Int = 20
 
 
     fun refresh() {
-        currentPage = 0
-        totalPages = 0
+        currentItem = 0
+        itemsPerPage = 20
         previousItemCount = 0
         loading = true
     }
@@ -33,9 +31,9 @@ abstract class EndlessRecyclerViewScrollListener constructor(): RecyclerView.OnS
         }
         val lastPosition = layoutManager.findLastVisibleItemPosition()
         if (lastPosition == recyclerView.adapter!!.itemCount - 1 && !loading) {
-            if ((currentPage + 1) < totalPages){
-                currentPage++
-                onLoadMore(currentPage)
+            if ((currentItem) <= currentItem+itemsPerPage){
+                currentItem += itemsPerPage
+                onLoadMore(currentItem)
                 loading = true
             }
         }
