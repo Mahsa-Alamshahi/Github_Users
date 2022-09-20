@@ -58,7 +58,7 @@ class UserInfoFragment : Fragment() {
                         showData(binding.txtRetry, binding.loading, binding.noData, binding.data)
                         binding.user = it
                     } ?: run {
-                        showRetryWhenIncounteredProblems(
+                        showRetryWhenFacedProblems(
                             binding.txtRetry,
                             binding.loading,
                             binding.noData,
@@ -82,7 +82,7 @@ class UserInfoFragment : Fragment() {
         )
         getUserData()
         } else {
-            showRetryWhenIncounteredProblems(
+            showRetryWhenFacedProblems(
                 binding.txtRetry,
                 binding.loading,
                 binding.noData,

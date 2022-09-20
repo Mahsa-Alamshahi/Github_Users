@@ -24,7 +24,6 @@ import com.github.github_users.framework.viewmodel.ListViewModel
 import com.github.github_users.framework.viewmodel.SearchViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import okhttp3.logging.HttpLoggingInterceptor
 import javax.inject.Inject
 
 
@@ -76,7 +75,7 @@ class UserListFragment : Fragment() {
             loadUserList()
             initScrollListener()
         } else {
-            showRetryWhenIncounteredProblems(
+            showRetryWhenFacedProblems(
                 binding.txtRetry,
                 binding.loading,
                 binding.noData,
@@ -148,7 +147,7 @@ class UserListFragment : Fragment() {
                 loadUserList()
             }
         }else {
-            showRetryWhenIncounteredProblems(
+            showRetryWhenFacedProblems(
                 binding.txtRetry,
                 binding.loading,
                 binding.noData,
@@ -195,7 +194,7 @@ class UserListFragment : Fragment() {
                 showNoData(binding.txtRetry, binding.loading, binding.noData, binding.userListView)
             }
         } else {
-            showRetryWhenIncounteredProblems(
+            showRetryWhenFacedProblems(
                 binding.txtRetry,
                 binding.loading,
                 binding.noData,

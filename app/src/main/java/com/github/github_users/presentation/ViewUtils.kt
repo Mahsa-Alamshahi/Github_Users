@@ -30,7 +30,7 @@ fun showProgressbarWhileGettingData(retry: View, loading: View, noData: View, da
 }
 
 
-fun showRetryWhenIncounteredProblems(retry: View, loading: View, noData: View, data: View) {
+fun showRetryWhenFacedProblems(retry: View, loading: View, noData: View, data: View) {
     retry.visibility = View.VISIBLE
     loading.visibility = View.GONE
     noData.visibility = View.GONE
